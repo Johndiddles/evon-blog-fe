@@ -7,17 +7,12 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.response.use((config) => {
-  if (config.status > 399) {
-  } else if (
+  if (
     config.status > 199 &&
     config.status < 300 &&
     config.config.method !== "get"
   ) {
     toast.success(config?.data?.message ?? "Success");
-  }
-  console.log({ config });
-  if (config.status === 401) {
-    console.log("nadaaa");
   }
 
   return config;

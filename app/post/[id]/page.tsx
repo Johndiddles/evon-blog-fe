@@ -67,7 +67,7 @@ const SinglePostPage = ({
   };
 
   return (
-    <main className="flex justify-center">
+    <main className="flex justify-center px-4 md:px-8">
       <div className="container">
         <section className="bg-white rounded-lg py-4 px-5">
           <Article

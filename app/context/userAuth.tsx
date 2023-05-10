@@ -31,21 +31,30 @@ export type apiCallStatus = "idle" | "pending" | "success" | "failed";
 
 interface UserContextType {
   userDetails: userDetails;
-  checkUserStatus: apiCallStatus;
+  // checkUserStatus: apiCallStatus;
   loginUser: (data: loginDetails) => Promise<void>;
+  logoutUser: () => void;
   signUpUser: (data: signUpDetails) => Promise<void>;
   isAuth: boolean;
+  isLoggingIn: boolean;
+  isSigningUp: boolean;
 }
-const UserContext = createContext<UserContextType>({
+
+const UserContextSchema: UserContextType = {
   userDetails: {
     username: "",
     user_id: null,
   },
-  checkUserStatus: "idle",
+  // checkUserStatus: "idle",
   async loginUser(data) {},
+  async logoutUser() {},
   async signUpUser(data) {},
+  isLoggingIn: false,
+  isSigningUp: false,
   isAuth: false,
-});
+};
+
+const UserContext = createContext<UserContextType>(UserContextSchema);
 
 const UserContextProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
@@ -53,13 +62,15 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
     user_id: null,
     username: "",
   });
-  const [checkUserStatus, setCheckUserStatus] = useState<apiCallStatus>("idle");
+  // const [checkUserStatus, setCheckUserStatus] = useState<apiCallStatus>("idle");
   const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
 
   const loginUser = async (data: loginDetails) => {
+    setIsLoggingIn(true);
     try {
       const response = await axiosInstance.post(`/login`, data);
-      console.log({ response });
 
       setUserDetails(() => ({
         username: response?.data?.username,
@@ -70,16 +81,20 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
       axiosInstance.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response?.data?.token}`;
+
       router.push("/");
-    } catch (error) {
-      console.log({ error });
+      setIsLoggingIn(false);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error);
+      setIsLoggingIn(false);
     }
   };
 
   const signUpUser = async (data: signUpDetails) => {
+    setIsSigningUp(true);
     try {
       const response = await axiosInstance.post("/create-user", data);
-      console.log({ response });
+
       setUserDetails(() => ({
         username: response?.data?.username,
         user_id: response?.data?.user_id,
@@ -90,8 +105,10 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
         "Authorization"
       ] = `Bearer ${response?.data?.token}`;
       router.push("/");
-    } catch (error) {
-      console.log({ error });
+      setIsSigningUp(false);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error);
+      setIsSigningUp(false);
     }
   };
 
@@ -100,42 +117,45 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
       user_id: null,
       username: "",
     });
-    setCheckUserStatus("idle");
+    // setCheckUserStatus("idle");
     localStorage.removeItem("ev_au_token");
     setIsAuth(false);
   };
 
-  const logoutUser = async () => {
+  const logoutUser = () => {
     resetUser();
-    router.push("/");
+    router.push("/login");
+    toast.success("Logged out successfully");
   };
 
-  useEffect(() => {
-    const verifyUser = async () => {
-      const token = localStorage.ev_au_token;
-      if (token) {
-        setCheckUserStatus("pending");
-        try {
-          console.log({ token });
-          setCheckUserStatus("success");
-        } catch (error) {
-          resetUser();
-          setCheckUserStatus("failed");
-        }
-      } else setCheckUserStatus("failed");
-    };
+  // useEffect(() => {
+  //   const verifyUser = async () => {
+  //     const token = localStorage.ev_au_token;
+  //     if (token) {
+  //       setCheckUserStatus("pending");
+  //       try {
+  //         setCheckUserStatus("success");
+  //       } catch (error) {
+  //         resetUser();
+  //         setCheckUserStatus("failed");
+  //       }
+  //     } else setCheckUserStatus("failed");
+  //   };
 
-    verifyUser();
-  }, []);
+  //   verifyUser();
+  // }, []);
 
   return (
     <UserContext.Provider
       value={{
         userDetails,
-        checkUserStatus,
+        // checkUserStatus,
         loginUser,
         isAuth,
         signUpUser,
+        logoutUser,
+        isLoggingIn,
+        isSigningUp,
       }}
     >
       {children}

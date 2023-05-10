@@ -25,10 +25,12 @@ export default function Home({}) {
   }, []);
 
   return (
-    <main className="flex flex-col items-center justify-between p-24 flex-grow">
+    <main className="flex flex-col items-center justify-between py-8 px-4 md:px-8 flex-grow">
       <div className="container">
         <div className="flex justify-between bg-white rounded-lg py-3 px-4 md:py-5 md:px-8">
-          <h1>All Posts</h1>
+          <h1 className="font-bold text-lg md:text-2xl text-slate-800">
+            All Posts
+          </h1>
 
           <Link href="/create-post" className="underline">
             Create New Post

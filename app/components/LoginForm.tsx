@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { loginDetails, useUserContext } from "../context/userAuth";
 
 const LoginForm = () => {
-  const userContext = useUserContext();
-  const loginUser = userContext?.loginUser;
+  const { loginUser, isLoggingIn } = useUserContext();
+  // const loginUser = userContext?.loginUser;
   const [data, setData] = useState<loginDetails>({
     username: "",
     password: "",
@@ -56,7 +56,7 @@ const LoginForm = () => {
             loginUser(data);
           }}
         >
-          Login
+          {isLoggingIn ? "Logging In..." : "Login"}
         </button>
       </div>
     </form>

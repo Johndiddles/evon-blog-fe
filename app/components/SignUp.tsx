@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { signUpDetails, useUserContext } from "../context/userAuth";
 
 const SignUpForm = () => {
-  const { signUpUser, loginUser } = useUserContext();
-  //   const loginUser = userContext?.loginUser;
+  const { signUpUser, isSigningUp } = useUserContext();
   const [data, setData] = useState<signUpDetails>({
     username: "",
     password: "",
@@ -74,7 +73,7 @@ const SignUpForm = () => {
             signUpUser(data);
           }}
         >
-          Sign Up
+          {isSigningUp ? "Signing Up..." : "Sign Up"}
         </button>
       </div>
     </form>

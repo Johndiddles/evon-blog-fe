@@ -4,6 +4,7 @@ import { useUserContext } from "../context/userAuth";
 import { useRouter } from "next/navigation";
 // import { useRouter as useNextRouter } from "next/router";
 import { axiosInstance } from "../utils/axiosInstance";
+import { toast } from "react-toastify";
 
 type blogPost = {
   title: string;
@@ -13,7 +14,7 @@ const CreatePostPage = () => {
   const router = useRouter();
   // const nextRouter = useNextRouter();
 
-  const { isAuth, checkUserStatus } = useUserContext();
+  const { isAuth } = useUserContext();
   const [blogPost, setBlogPost] = useState<blogPost>({
     title: "",
     body: "",
@@ -30,38 +31,13 @@ const CreatePostPage = () => {
         setIsSubmitting(false);
       }
       setIsSubmitting(false);
-    } catch (error) {
-      console.log({ error });
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error);
       setIsSubmitting(false);
     }
   };
 
-  const updatePost = async (data: blogPost) => {
-    setIsSubmitting(true);
-    try {
-      const response = await axiosInstance.post("/create-post", data);
-      if (response.status === 201) {
-        router.push("/");
-        setIsSubmitting(false);
-      }
-      setIsSubmitting(false);
-    } catch (error) {
-      console.log({ error });
-      setIsSubmitting(false);
-    }
-  };
-
-  if (checkUserStatus === "idle" || checkUserStatus === "pending") {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        loading
-      </main>
-    );
-  }
-  if (
-    (checkUserStatus === "failed" || checkUserStatus === "success") &&
-    !isAuth
-  ) {
+  if (!isAuth) {
     return router.push("/login");
   }
   return (
