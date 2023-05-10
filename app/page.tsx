@@ -25,31 +25,35 @@ export default function Home({}) {
   }, []);
 
   return (
-    <main className="flex flex-col items-center justify-between p-24">
-      <div>
-        <h1>All Posts</h1>
+    <main className="flex flex-col items-center justify-between p-24 flex-grow">
+      <div className="container">
+        <div className="flex justify-between bg-white rounded-lg py-3 px-4 md:py-5 md:px-8">
+          <h1>All Posts</h1>
 
-        <Link href="/create-post">Create New Post</Link>
-      </div>
+          <Link href="/create-post" className="underline">
+            Create New Post
+          </Link>
+        </div>
 
-      <div className="flex flex-col gap-5">
-        {posts?.length > 0 ? (
-          posts?.map((post) => (
-            <div key={post.id}>
-              <Link href={`/post/${post.id}`}>
-                <h3 className="font-bold underline">{post.title}</h3>
-              </Link>
-              <p>{post.body}</p>
+        <div className="flex flex-col gap-5 mt-5 md:mt-8 bg-white rounded-lg py-3 px-4 md:py-5 md:px-8">
+          {posts?.length > 0 ? (
+            posts?.map((post) => (
+              <div
+                key={post.id}
+                className="border-b border-b-[rgba(0,0,0,0.05)] pb-4"
+              >
+                <Link href={`/post/${post.id}`}>
+                  <h3 className="font-bold underline">{post.title}</h3>
+                </Link>
+                <p>{post.body}</p>
+              </div>
+            ))
+          ) : (
+            <div>
+              <p className="text-center">No posts at this time</p>
             </div>
-          ))
-        ) : (
-          <div>
-            <p>No posts at this time</p>
-            <Link className="mt-4" href="/create-post">
-              Create Post
-            </Link>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </main>
   );
