@@ -12,7 +12,7 @@ type blogPost = {
 const EditPostPage = () => {
   const router = useRouter();
 
-  const { isAuth, checkUserStatus } = useUserContext();
+  const { isAuth } = useUserContext();
   const [blogPost, setBlogPost] = useState<blogPost>({
     title: "",
     body: "",
@@ -35,19 +35,12 @@ const EditPostPage = () => {
     }
   };
 
-  if (checkUserStatus === "idle" || checkUserStatus === "pending") {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        loading
-      </main>
-    );
-  }
-  if (
-    (checkUserStatus === "failed" || checkUserStatus === "success") &&
-    !isAuth
-  ) {
-    return router.push("/login");
-  }
+  useEffect(() => {
+    if (!isAuth) {
+      return router.push("/login");
+    }
+  }, [isAuth, router]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="container bg-white rounded-lg py-4 px-4 md:py-8 md:px-10 flex flex-col gap-5">

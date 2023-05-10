@@ -1,12 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Post } from "@/app/models/post";
-import moment from "moment";
 import { axiosInstance } from "@/app/utils/axiosInstance";
-import { FaEdit } from "react-icons/fa";
+
 import { useUserContext } from "@/app/context/userAuth";
 import Article from "@/app/components/Article";
-import { toast } from "react-toastify";
 
 const SinglePostPage = ({
   params,
@@ -15,7 +13,6 @@ const SinglePostPage = ({
     id: string;
   };
 }) => {
-  const { isAuth, userDetails } = useUserContext();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [fetchPostStatus, setFetchPostStatus] = useState<string>("idle");

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../context/userAuth";
 import { useRouter } from "next/navigation";
-// import { useRouter as useNextRouter } from "next/router";
 import { axiosInstance } from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 
@@ -12,7 +11,6 @@ type blogPost = {
 };
 const CreatePostPage = () => {
   const router = useRouter();
-  // const nextRouter = useNextRouter();
 
   const { isAuth } = useUserContext();
   const [blogPost, setBlogPost] = useState<blogPost>({
@@ -37,9 +35,12 @@ const CreatePostPage = () => {
     }
   };
 
-  if (!isAuth) {
-    return router.push("/login");
-  }
+  useEffect(() => {
+    if (!isAuth) {
+      return router.push("/login");
+    }
+  }, [isAuth, router]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="container bg-white rounded-lg py-4 px-4 md:py-8 md:px-10 flex flex-col gap-5">
