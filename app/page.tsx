@@ -1,23 +1,23 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { Post } from "./models/post";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "./utils/axiosInstance";
 
-export const fetchPosts = async () => {
-  const response = await axiosInstance("/get-posts");
-  const data = response?.data;
+// const fetchPosts = async () => {
+//   const response = await axiosInstance("/get-posts");
+//   const data = response?.data;
 
-  return data ?? [];
-};
+//   return data ?? [];
+// };
 
 export default function Home({}) {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const getPosts = async () => {
-      const data: Post[] = await fetchPosts();
+      const response = await axiosInstance("/get-posts");
+      const data = response?.data;
       setPosts(data);
     };
 
